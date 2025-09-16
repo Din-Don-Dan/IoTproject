@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+    <head>
+
+        <title>Test</title>
+        
+        <script src='/socket.io/socket.io.js'></script>
+        <script src='http://code.jquery.com/jquery-1.11.1.js'></script>
+
+    </head>
+    <body>
+
+        <h1>Test</h1>
+        
+        <form id="form" action = "">
+            CO2 cycle time (minutes): <input type="number" id="co2form" min="0" required><br>
+            H2 cycle time (minutes): <input type="number" id="h2form" min="0" required><br>
+            Purge cycle time (minutes): <input type="number" id="purgeform" min="0" required><br>
+            Total number of cycles: <input type="number" id="cyclesform" min="0" required><br>
+            <input id= "start" type="submit" value="Start">
+        </form>
+        <br>
+        <p id="Status">Status:</p>
+        
+        <script>
+            
+        const socket = io();
+        
+        const fform = document.getElementById('form');    
+        fform.addEventListener("submit", (e) => {
+            e.preventDefault();   
+        });
+        
+        $(document).ready(() => {
+            $('#form').submit( () => {
+                socket.emit('form', {'co2' : $('#co2form').val(), 'h2' : $('#h2form').val(), 
+                                    'purge' : $('#purgeform').val(), 'cycles' : $('#cyclesform').val()
+                });
+                $('#start').attr('disabled', true ); 
+                return false;
+            });    
+        });
+        
+        let status = document.getElementById('Status');
+        
+        function updatestatus(data) { status.innerHTML = "Status: " + data;
+        }
+        
+        socket.on('data', (data) => {updatestatus(data);
+        });
+        
+        socket.on('end', (data) => {$('#start').attr('disabled', false );
+                                    updatestatus(data);
+        });    
+        
+        </script>
+        
+    </body>
+</html>
