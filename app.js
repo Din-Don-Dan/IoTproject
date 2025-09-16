@@ -13,7 +13,7 @@ const parser = new ReadlineParser({
     delimiter: "\r\n"
 });
 
-const port = new SerialPort({ path:'/dev/ttyACM0', 
+const port = new SerialPort({ path:'COM5', 
     baudRate: 9600
 });
 
